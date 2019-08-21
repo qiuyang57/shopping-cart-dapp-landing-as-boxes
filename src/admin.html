@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<link rel="shortcut icon" href="">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Landing as boxes</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container" style="width: 650px;">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1 class="text-center">PUBG Store</h1>
+          <hr/>
+          <br/>
+          <div id="loader">
+            <p class="text-center">Loading...</p>
+          </div>
+          <div id="content" style="display: none;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Exist</th>
+                </tr>
+              </thead>
+              <tbody id="selfproductsList">
+              </tbody>
+            </table>
+            <hr/>
+            <form onSubmit="App.modify(); return false;">
+                <div class="form-group">
+                    <label for="mod_id">Modify your product by ID:</label>
+                    <input id="mod_id" type="text">
+                    </input>
+                    </br>
+                    <label for="mod_name">Product Name:</label>
+                    <input id="mod_name" type="text">
+                    </input>
+                    </br>
+                    <label for="mod_discription">Product discription:</label>
+                    <input id="mod_discription" type="text">
+                    </input>
+                    </br>
+                    <label for="mod_price">Product price:</label>
+                    <input id="mod_price" type="number">
+                    </input>
+                  </br>
+                  <label for="mod_quantity">Product quantity:</label>
+                    <input id="mod_quantity" type="number">
+                    </input>
+                  </br>
+                  <label for="exist">Exist:</label>
+                  keep
+                  <input type="radio" name="exist" value="1" checked>
+                  </input>
+                  delete
+                  <input type="radio" name="exist" value="0">
+                  </input>
+                </br>
+                </div>
+                <button type="modify" class="btn btn-primary" >Modify</button>
+                <hr />
+              </form>
+            <!--<button type="modify" class="btn btn-primary" onclick="modify_product()" >Modify1</button>-->
+            <form onSubmit="App.post(); return false;">
+              <div class="form-group">
+                <label for="new_name">New product Name:</label>
+                <input id="new_name" type="text">
+                </input>
+                </br>
+                <label for="new_discription">New product discription:</label>
+                <input id="new_discription" type="text">
+                </input>
+                </br>
+                <label for="new_price">New product price:</label>
+                <input id="new_price" type="number">
+                </input>
+              </br>
+              <label for="new_quantity">New product quantity:</label>
+                <input id="new_quantity" type="number">
+                </input>
+              </br>
+              </div>
+              <input type="file" onchange='PreviewImage(this)' />input main image
+                <div id="imgPreview" >
+                    <img src="" />
+                </div>
+              <input type="file" id="fileButton" accept="image/*" multiple="multiple" onchange='upload_imgs(this)'>input detail images
+            </br>
+              <button type="post" class="btn btn-primary">AddProduct</button>
+
+
+
+              <p id="accountAddress" class="text-center"></p>
+                <p id="accountBalance1" class="text-center"></p>
+              <hr />
+
+            </form>
+               <input id="recharge_number" type="text">1ETH : 1000 chicken&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                </input>
+               <button  class="btn btn-primary" onclick="recharge_balance()">Recharge Balance</button>
+              </br>
+               </br>
+              <input id="withdraw_number" type="text">how many chicken you want to withdraw?
+                </input>
+
+               <button  class="btn btn-primary" onclick="withdraw_balance()">Withdraw Balance</button>
+
+
+                       <table class="table">
+                       <table class="table">
+
+                <thead>
+                  <tr>
+
+                    <th scope="col"width="5%">#</th>
+                    <th scope="col"width="30%">Buyer</th>
+                    <th scope="col"width="5%">P_id</th>
+                    <th scope="col"width="10%">P_name</th>
+                    <th scope="col"width="10%">totalprice</th>
+                    <th scope="col"width="10%">Quantity</th>
+                    <th scope="col"width="15%">Time</th>
+                    <th scope="col"width="10%">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="selltransactionsList">
+                </tbody>
+              </table>
+              <hr/>
+              <form onSubmit="App.sell_history(); return false;">
+              <button type="history" class="btn btn-primary">History</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div>
+    </div>
+      <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase-firestore.js"></script>
+
+      <script>
+        var config = {
+          apiKey: "AIzaSyA1CQgWPM37lRowMPdd2aq2ABz3c43KjGU",
+          authDomain: "comp9900-2bf5f.firebaseapp.com",
+          databaseURL: "https://comp9900-2bf5f.firebaseio.com",
+          projectId: "comp9900-2bf5f",
+          storageBucket: "comp9900-2bf5f.appspot.com",
+          messagingSenderId: "202650852625"
+        };
+        var firebase = firebase.initializeApp(config);
+
+
+// Create a reference from a Google Cloud Storage URI
+// var gsReference = storage.refFromURL('gs://bucket/images/stars.jpg')
+
+        function upload_imgs(imgFiles) {
+            if(!document.getElementById("new_name").value){
+                alert("please input new product information!")
+            }
+            else {
+                for (var i = 0; i < imgFiles.files.length; i++) {
+                    var storageRef = firebase.storage().ref(App.account + "/detail_imgs/" + document.getElementById("new_name").value + i + ".jpg");
+                    storageRef.put(imgFiles.files[i]);
+                }
+                alert("upload successful!");
+            }
+
+        }
+        // function modify_product() {
+        //   App.modify();
+        //  }
+        function withdraw_balance() {
+            var number = document.getElementById("withdraw_number").value;
+            App.withdraw(number);
+        }
+        function recharge_balance(){
+            var number = document.getElementById("recharge_number").value;
+            App.top_up(number);
+        }
+        function PreviewImage(imgFile) {
+        var pattern = /(\.*.jpg$)|(\.*.png$)|(\.*.jpeg$)|(\.*.gif$)|(\.*.bmp$)/;
+        if (!pattern.test(imgFile.value)) {
+            alert("系统仅支持jpg/jpeg/png/gif/bmp格式的照片！");
+            imgFile.focus();
+        } else {
+            if(!document.getElementById("new_name").value){
+                alert("please input new product information!")
+            }
+            else {
+                var path;
+                if (document.all) {//IE
+                    imgFile.select();
+                    path = document.selection.createRange().text;
+                    console.log(path);
+                    document.getElementById("imgPreview").innerHTML = "";
+                    document.getElementById("imgPreview").style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true',sizingMethod='scale',src=\"" + path + "\")";//使用滤镜效果
+                } else {//FF
+                    var reader = new FileReader();
+                    path = URL.createObjectURL(imgFile.files[0]);
+                    console.log(imgFile.files[0]);
+                    document.getElementById("imgPreview").innerHTML = "<img src='" + path + "'/>";
+                    console.log(App.account);
+                    var storageRef = firebase.storage().ref(App.account + "/main_img/" + document.getElementById("new_name").value + ".jpg");
+                    storageRef.put(imgFile.files[0]);
+
+                }
+            }
+        }
+    }
+      </script>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/App.js"></script>
+  </body>
+</html>
